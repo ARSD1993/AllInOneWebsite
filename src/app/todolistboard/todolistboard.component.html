@@ -1,0 +1,9 @@
+  <h2>Todos</h2>
+<div *ngIf="todoService.getTodoList().length">
+
+  <h2>Messages</h2>
+  <div *ngFor="let todo of todoService.getTodoList()"> {{todo.todo}} | {{todo.todoPriority}} | 
+      {{todo.todoDate}} <button class="clear"
+          (click)="todoService.deleteTodo(todo.id)">clear</button> </div>
+
+</div>

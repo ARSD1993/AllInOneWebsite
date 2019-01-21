@@ -1,0 +1,24 @@
+<div>
+  <label>Todo:
+    <input [(ngModel)]="todo" required #todoCheck="ngModel">
+      <div *ngIf="todoCheck.invalid">
+    Todo is required.
+     </div>
+  </label>
+</div>
+<div>
+    <label> Priority:
+  <select [(ngModel)]="todoPriority" required #priorityCheck="ngModel">
+    <option value="High Priority">High Priority</option>
+    <option value="Medium Priority">Medium Priority</option>
+    <option value="Low Priority">Low Priority</option>
+    <option value="No Priority">No Priority</option>
+  </select>
+        <div *ngIf="priorityCheck.invalid">
+    Priority is required.
+     </div>
+    </label>
+</div>
+<div>
+  <button *ngIf="todoCheck.valid && priorityCheck.valid" (click)="addTodo()">Add</button>
+</div>

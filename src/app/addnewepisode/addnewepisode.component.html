@@ -1,0 +1,11 @@
+<div>
+  <label>Series:
+    <input [(ngModel)]="episodeName" required #episodeCheck="ngModel">
+      <div *ngIf="episodeCheck.invalid">
+    Series is required
+     </div>
+  </label>
+</div>
+<div>
+  <button *ngIf="episodeCheck.valid" (click)="addEpisode()">Add</button>
+</div>
