@@ -12,6 +12,6 @@
 
   1) Need to add data from a users favorite teams, favorite authors, stocks and sport scores.
   
-  2) The episode data will need to update itself ocasionally to see if new episodes were added. Also need a delete button to remove series.
+  2) The Episode service is complete. Needs to be refactored a bit with add episode and update episode being very similar
   
-  3) Entire site needs CSS or needs to look better but this well be after all features are added. 
+  3) Entire site needs CSS or needs to look better but this well be done after all features are added. 
