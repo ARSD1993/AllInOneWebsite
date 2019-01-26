@@ -18,7 +18,6 @@ const PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
 export class NewepisodeService {
     addNewEpisode(seriesName: string): void {
       const sourceSeriesName = seriesName.toLowerCase().replace(new RegExp('\\s', 'g'), '-');
-      console.log(sourceSeriesName);
       const seriesList: Object = this.getSeriesList();
       if (!seriesList.hasOwnProperty(sourceSeriesName)) {
       this.getEpisodePage(sourceSeriesName).subscribe((response) => {
@@ -47,7 +46,7 @@ export class NewepisodeService {
         if (currentEpisodeNum === 1) {
           currentEpisodeNum = showsUrl.length;
         }
-        episodeList = episodeList.slice(0, currentEpisodeNum);
+        episodeList = episodeList.slice(1, currentEpisodeNum);
         this.setList(episodeList, seriesName);
       });
     } else {
@@ -109,6 +108,69 @@ export class NewepisodeService {
       }
   }
   localStorage.setItem('series', JSON.stringify(seriesList));
+}
+
+public updateSeries(seriesName: string): void {
+      const seriesList = this.getSeriesList();
+      for (const key in seriesList) {
+        if (seriesList.hasOwnProperty(key)) {
+         const value = seriesList[key];
+         if (value.hasOwnProperty(seriesName)) {
+           const episodeArray: Episode[] = value[seriesName];
+           const sourceSeriesName = seriesName.toLowerCase().replace(new RegExp('\\s', 'g'), '-');
+           this.getEpisodePage(sourceSeriesName).subscribe((response) => {
+               const text = response;
+        const regEpisodeUrl = new RegExp('a href=\"\/' + sourceSeriesName + '\/episode-\\d+.*', 'g');
+        const regEpisodeNumber = new RegExp('episode-\\d+-(.*)-\\d+.*title=\\"(.*)\\"', 'g');
+        const showsUrl = text.match(regEpisodeUrl);
+        let currentEpisodeNum = 0;
+        const episodeNumber1 = /(\d+)/g;
+        let test = regEpisodeNumber.exec(text);
+        const episodeName = [];
+        while (test !== null) {
+            episodeName.push(test[2] + ': ' + test[1]);
+            test = regEpisodeNumber.exec(text);
+        }
+        let episodeList = [];
+        for (let i = 0; i < showsUrl.length; i++) {
+            const found1 = episodeName[i].match(episodeNumber1);
+            if (currentEpisodeNum !== 0 && currentEpisodeNum < +found1[0]) {
+                currentEpisodeNum = i;
+                break;
+            }
+            episodeList.push(new Episode(episodeName[i], false, seriesName));
+            currentEpisodeNum = +found1[0];
+        }
+        if (currentEpisodeNum === 1) {
+          currentEpisodeNum = showsUrl.length;
+        }
+        episodeList = episodeList.slice(0, currentEpisodeNum);
+        for (let i = 0; i < episodeList.length - episodeArray.length; i++) {
+            episodeArray.splice(i , 0 , episodeList[i]);
+        }
+        seriesList[seriesName] = episodeArray;
+        localStorage.setItem('series', JSON.stringify(seriesList));
+            });
+            break;
+         }
+      }
+  }
+}
+
+public deleteSeries(seriesName: string): void {
+      const obj = localStorage.getItem('series');
+      const array = JSON.parse(obj);
+      for (const key in array) {
+        if (array.hasOwnProperty(key)) {
+         const value = array[key];
+         if (value.hasOwnProperty(seriesName)) {
+             delete array[key];
+             array.splice(key, 1);
+             break;
+         }
+      }
+  }
+localStorage.setItem('series', JSON.stringify(array));
 }
 
     private handleError<T> (operation = 'operation', result?: T) {

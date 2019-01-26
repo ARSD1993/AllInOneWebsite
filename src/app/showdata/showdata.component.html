@@ -5,7 +5,7 @@
 <div *ngFor="let item of newEpisode.getSeriesList() | keyvalue">
     <div *ngIf="item.value != null"> 
 
-  <div *ngFor="let series of item.value | keyvalue"> 
+  <div *ngFor="let series of item.value | keyvalue">
           <h2>{{series.key}}</h2>
         <div *ngFor="let show of series.value">
             <div *ngIf="show.haveSeen; else haveNotSeen">
@@ -19,6 +19,8 @@
                 <label style="color:red">{{show.episodeName}} </label>  
             </ng-template>
          </div>
+          <button class="clear" (click)="newEpisode.deleteSeries(series.key)">Remove Series</button> 
+          <button class="clear" (click)="newEpisode.updateSeries(series.key)">Update Series</button> 
   </div>
           
 
